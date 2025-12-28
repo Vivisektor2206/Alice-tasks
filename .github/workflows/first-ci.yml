@@ -1,0 +1,22 @@
+name: Мой первый CI
+
+# Запускать при каждом push в любую ветку
+on: push
+
+jobs:
+  # Название задачи (можно любое)
+  hello-world:
+    # ОС для выполнения (ubuntu-latest — самая популярная)
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Шаг 1: скачать код репозитория на сервер GitHub Actions
+      - uses: actions/checkout@v4
+      
+      # Шаг 2: вывести сообщение в лог
+      - name: Приветствие
+        run: echo "Привет! Пайплайн работает!"
+      
+      # Шаг 3: показать версию Node.js (пример дополнительной проверки)
+      - name: Проверить Node.js
+        run: node --version
