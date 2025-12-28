@@ -1,0 +1,47 @@
+name: Мой первый CI
+
+on: push
+
+jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Скачать код
+        uses: actions/checkout@v4
+
+      - name: Приветствие
+        run: echo "Привет! Пайплайн работает!"
+
+      - name: Установить Node.js (если нужен)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Проверить Node.js
+        run: node --version
+
+      - name: Проверить наличие index.html
+        run: |
+          if [ ! -f index.html ]; then
+            echo "⚠️ Файл index.html не найден!"
+            exit 1
+          fi
+
+      - name: Валидация HTML (через tidy)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tidy
+          echo "🚀 Начинаю проверку HTML..."
+          tidy -q -e index.html
+          echo "✅ HTML валиден!"
+
+
+      - name: Дополнительная проверка (закрытые теги)
+        run: |
+          echo "🔍 Проверяю структуру HTML..."
+          grep -q "<[^>]*>" index.html && echo "Теги найдены" || echo "Нет тегов!"
+          if grep -q "<[a-zA-Z][^>]*>[^<]*$" index.html; then
+            echo "⚠️ Возможно, есть незакрытые теги!"
+            exit 1
+          fi
